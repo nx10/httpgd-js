@@ -1,6 +1,6 @@
 {
   "name": "httpgd",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "API wrapper and connection helpers to connect with R httpgd servers.",
   "main": "lib/httpgd.js",
   "types": "lib/httpgd.d.ts",
