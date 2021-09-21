@@ -1,0 +1,30 @@
+{
+  "name": "httpgd",
+  "version": "0.1.0",
+  "description": "API wrapper and connection helpers to connect with R httpgd servers.",
+  "main": "lib/httpgd.js",
+  "types": "lib/httpgd.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "format": "prettier --config .prettierrc \"src/**/*.ts\" --write",
+    "lint": "eslint \"src/**/*.ts\" --fix",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "author": "Florian Rupprecht",
+  "license": "MIT",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
+    "eslint": "^7.32.0",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.3"
+  },
+  "files": [
+    "lib/**/*"
+  ]
+}
