@@ -2,11 +2,14 @@ import { HttpgdBackend, HttpgdStateResponse } from './types';
 import * as api from './api';
 import { StateChangeListener } from './utils';
 
+/**
+ * Connection mode.
+ */
 export const enum HttpgdConnectionMode {
   NONE,
   POLL,
   SLOWPOLL,
-  WEBSOCKET,
+  WEBSOCKET
 }
 
 /**
@@ -20,6 +23,9 @@ export class HttpgdConnection {
   private static readonly INTERVAL_POLL: number = 500;
   private static readonly INTERVAL_POLL_SLOW: number = 15000;
 
+  /**
+   * Httpgd backend
+   */
   public backend: HttpgdBackend;
 
   private mode: HttpgdConnectionMode = HttpgdConnectionMode.NONE;
@@ -33,19 +39,35 @@ export class HttpgdConnection {
 
   private lastState?: HttpgdStateResponse;
 
-  private remoteStateChanged: StateChangeListener<HttpgdStateResponse> = new StateChangeListener();
-  private connectionChanged: StateChangeListener<boolean> = new StateChangeListener();
+  private remoteStateChanged: StateChangeListener<HttpgdStateResponse> =
+    new StateChangeListener();
+  private connectionChanged: StateChangeListener<boolean> =
+    new StateChangeListener();
 
+  /**
+   * Setup connection.
+   *
+   * Note that HttpgdConnection.open() has to be called after to open the connection.
+   *
+   * @param backend Httpgd backend
+   * @param allowWebsockets Allow WebSocket connection.
+   */
   public constructor(backend: HttpgdBackend, allowWebsockets?: boolean) {
     this.backend = backend;
     this.allowWebsockets = allowWebsockets ? allowWebsockets : false;
   }
 
+  /**
+   * Open connection and start listening for remote changes.
+   */
   public open(): void {
     if (this.mode != HttpgdConnectionMode.NONE) return;
     this.start(HttpgdConnectionMode.WEBSOCKET);
   }
 
+  /**
+   * Close connection and stop listening for remote changes.
+   */
   public close(): void {
     if (this.mode == HttpgdConnectionMode.NONE) return;
     this.start(HttpgdConnectionMode.NONE);
@@ -59,14 +81,20 @@ export class HttpgdConnection {
         //console.log("Start POLL");
         this.clearWebsocket();
         this.clearPoll();
-        this.pollHandle = setInterval(() => this.poll(), HttpgdConnection.INTERVAL_POLL);
+        this.pollHandle = setInterval(
+          () => this.poll(),
+          HttpgdConnection.INTERVAL_POLL
+        );
         this.mode = targetMode;
         break;
       case HttpgdConnectionMode.SLOWPOLL:
         //console.log("Start SLOWPOLL");
         this.clearWebsocket();
         this.clearPoll();
-        this.pollHandle = setInterval(() => this.poll(), HttpgdConnection.INTERVAL_POLL_SLOW);
+        this.pollHandle = setInterval(
+          () => this.poll(),
+          HttpgdConnection.INTERVAL_POLL_SLOW
+        );
         this.mode = targetMode;
         break;
       case HttpgdConnectionMode.WEBSOCKET:
@@ -118,13 +146,15 @@ export class HttpgdConnection {
       })
       .then((remoteState: HttpgdStateResponse) => {
         this.setDisconnected(false);
-        if (this.mode === HttpgdConnectionMode.SLOWPOLL) this.start(HttpgdConnectionMode.WEBSOCKET); // reconnect
+        if (this.mode === HttpgdConnectionMode.SLOWPOLL)
+          this.start(HttpgdConnectionMode.WEBSOCKET); // reconnect
         if (this.pausePoll) return;
         this.checkState(remoteState);
       })
       .catch(() => {
         this.setDisconnected(true);
-        if (this.mode !== HttpgdConnectionMode.SLOWPOLL) this.start(HttpgdConnectionMode.SLOWPOLL);
+        if (this.mode !== HttpgdConnectionMode.SLOWPOLL)
+          this.start(HttpgdConnectionMode.SLOWPOLL);
       });
   }
 
@@ -169,11 +199,25 @@ export class HttpgdConnection {
     }
   }
 
-  public onRemoteChange(fun: (newState: HttpgdStateResponse, oldState?: HttpgdStateResponse) => void): void {
+  /**
+   * Listen to server state (plot or device active status) changes.
+   *
+   * @param fun
+   */
+  public onRemoteChange(
+    fun: (newState: HttpgdStateResponse, oldState?: HttpgdStateResponse) => void
+  ): void {
     this.remoteStateChanged.subscribe(fun);
   }
 
-  public onConnectionChange(fun: (newState: boolean, oldState?: boolean) => void): void {
+  /**
+   * Listen to connection changes.
+   *
+   * @param fun
+   */
+  public onConnectionChange(
+    fun: (newState: boolean, oldState?: boolean) => void
+  ): void {
     this.connectionChanged.subscribe(fun);
   }
 }

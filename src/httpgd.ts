@@ -1,15 +1,21 @@
 import {
-  HttpgdBackend,
-  HttpgdStateResponse,
-  HttpgdPlotsResponse,
-  HttpgdRenderersResponse,
-  HttpgdPlotRequest,
-  HttpgdIdResponse,
-  HttpgdRendererResponse,
-  HttpgdRemoveRequest,
-} from './types';
-import { fetch_clear, fetch_plots, fetch_remove, fetch_renderers, url_plot } from './api';
+  fetch_clear,
+  fetch_plots,
+  fetch_remove,
+  fetch_renderers,
+  url_plot
+} from './api';
 import { HttpgdConnection } from './connection';
+import {
+  HttpgdBackend,
+  HttpgdIdResponse,
+  HttpgdPlotRequest,
+  HttpgdPlotsResponse,
+  HttpgdRemoveRequest,
+  HttpgdRendererResponse,
+  HttpgdRenderersResponse,
+  HttpgdStateResponse
+} from './types';
 import { StateChangeListener } from './utils';
 
 interface HttpgdData {
@@ -17,32 +23,74 @@ interface HttpgdData {
   plots?: HttpgdPlotsResponse;
 }
 
+/**
+ * Manages httpgd connection and API access.
+ */
 export class Httpgd {
   private backend: HttpgdBackend;
   private connection: HttpgdConnection;
   private data: HttpgdData;
 
-  private plotsChanged: StateChangeListener<HttpgdPlotsResponse> = new StateChangeListener();
-  private deviceActiveChanged: StateChangeListener<boolean> = new StateChangeListener();
+  private plotsChanged: StateChangeListener<HttpgdPlotsResponse> =
+    new StateChangeListener();
+  private deviceActiveChanged: StateChangeListener<boolean> =
+    new StateChangeListener();
 
+  /**
+   * Setup httpgd backend and connection.
+   *
+   * Note that Httpgd.connect() needs to be called after to open the connection
+   * and start listening for remote changes.
+   *
+   * @param host Httpgd host
+   * @param token Security token
+   * @param allowWebsockets Allow WebSocket connection
+   */
   constructor(host: string, token?: string, allowWebsockets?: boolean) {
     this.data = {};
     this.backend = { host: host, token: token };
     this.connection = new HttpgdConnection(this.backend, allowWebsockets);
-    this.connection.onRemoteChange((newState, oldState?) => this.remoteStateChanged(newState, oldState));
+    this.connection.onRemoteChange((newState, oldState?) =>
+      this.remoteStateChanged(newState, oldState)
+    );
   }
 
+  /**
+   * Open the connection to the httpgd backend.
+   *
+   * This will also cause a renderer list update and return a promise that will
+   * be resolved once the renderers are updated.
+   *
+   * @returns
+   */
   public connect(): Promise<void> {
     this.connection.open();
     return this.updateRenderers();
   }
 
-  public onConnectionChange(fun: (newState: boolean, oldState?: boolean) => void): void {
+  /**
+   * Listen to connection changes.
+   *
+   * A connection change occurs when the server goes offline or the connection
+   * is interrupted.
+   *
+   * @param fun
+   */
+  public onConnectionChange(
+    fun: (newState: boolean, oldState?: boolean) => void
+  ): void {
     this.connection.onConnectionChange(fun);
   }
 
-  private remoteStateChanged(newState: HttpgdStateResponse, oldState?: HttpgdStateResponse) {
-    if (!oldState || oldState.hsize !== newState.hsize || oldState.upid !== newState.upid) {
+  private remoteStateChanged(
+    newState: HttpgdStateResponse,
+    oldState?: HttpgdStateResponse
+  ) {
+    if (
+      !oldState ||
+      oldState.hsize !== newState.hsize ||
+      oldState.upid !== newState.upid
+    ) {
       this.updatePlots();
     }
     if (!oldState || oldState.active != newState.active) {
@@ -60,6 +108,9 @@ export class Httpgd {
     });
   }
 
+  /**
+   * Update plot ID list data.
+   */
   public updatePlots(): void {
     fetch_plots(this.backend).then((res) => {
       this.data.plots = res;
@@ -67,30 +118,76 @@ export class Httpgd {
     });
   }
 
+  /**
+   * Get plot ID list.
+   *
+   * @returns
+   */
   public getPlots(): HttpgdIdResponse[] {
     return this.data.plots ? this.data.plots.plots : [];
   }
 
+  /**
+   * Get renderer list.
+   *
+   * @returns
+   */
   public getRenderers(): HttpgdRendererResponse[] {
     return this.data.renderers ? this.data.renderers.renderers : [];
   }
 
+  /**
+   * Get the URL of a plot.
+   *
+   * @param r Plot request object.
+   * @returns URL string
+   */
   public getPlotURL(r: HttpgdPlotRequest): string | undefined {
-    return this.data.plots ? url_plot(this.backend, r, true, this.data.plots.state.upid.toString()) : undefined;
+    return this.data.plots
+      ? url_plot(this.backend, r, true, this.data.plots.state.upid.toString())
+      : undefined;
   }
 
-  public onPlotsChanged(fun: (newState: HttpgdPlotsResponse, oldState?: HttpgdPlotsResponse) => void): void {
+  /**
+   * Listen to plot changes.
+   *
+   * Plot changes occur when a plot changes or a new plot is added remotely in
+   * the R session.
+   */
+  public onPlotsChanged(
+    fun: (newState: HttpgdPlotsResponse, oldState?: HttpgdPlotsResponse) => void
+  ): void {
     this.plotsChanged.subscribe(fun);
   }
 
-  public onDeviceActiveChanged(fun: (newState: boolean, oldState?: boolean) => void): void {
+  /**
+   * Listen to device active changes.
+   *
+   * The R GraphicsDevice becomes inactive when a other graphics device is
+   * created remotely in the R session.
+   *
+   * @param fun
+   */
+  public onDeviceActiveChanged(
+    fun: (newState: boolean, oldState?: boolean) => void
+  ): void {
     this.deviceActiveChanged.subscribe(fun);
   }
 
+  /**
+   * Remove a specific plot.
+   *
+   * @param r Remove request object
+   */
   public removePlot(r: HttpgdRemoveRequest): void {
-    fetch_remove(this.backend, r).then((state) => this.localStateChanged(state));
+    fetch_remove(this.backend, r).then((state) =>
+      this.localStateChanged(state)
+    );
   }
 
+  /**
+   * Clear all plots.
+   */
   public clearPlots(): void {
     fetch_clear(this.backend).then((state) => this.localStateChanged(state));
   }
