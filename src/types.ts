@@ -1,25 +1,38 @@
+/**
+ * Access parameters to a httpgd server.
+ */
 export interface HttpgdBackend {
   host: string;
   token?: string;
 }
 
-// API response objects
-
+/**
+ * Defines the httpgd server state.
+ */
 export interface HttpgdStateResponse {
   upid: number;
   hsize: number;
   active: boolean;
 }
 
+/**
+ * Plot ID object
+ */
 export interface HttpgdIdResponse {
   id: string;
 }
 
+/**
+ * List of plot IDs
+ */
 export interface HttpgdPlotsResponse {
   state: HttpgdStateResponse;
   plots: HttpgdIdResponse[];
 }
 
+/**
+ * Renderer meta information
+ */
 export interface HttpgdRendererResponse {
   id: string;
   mime: string;
@@ -29,12 +42,16 @@ export interface HttpgdRendererResponse {
   bin: boolean;
 }
 
+/**
+ * List of renderers
+ */
 export interface HttpgdRenderersResponse {
   renderers: HttpgdRendererResponse[];
 }
 
-// API request objects
-
+/**
+ * Plot request parameters
+ */
 export interface HttpgdPlotRequest {
   id?: string;
   renderer?: string;
@@ -44,6 +61,9 @@ export interface HttpgdPlotRequest {
   download?: string;
 }
 
+/**
+ * Remove request parameters
+ */
 export interface HttpgdRemoveRequest {
   id: string;
 }

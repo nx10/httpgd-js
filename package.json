@@ -1,7 +1,7 @@
 {
   "name": "httpgd",
-  "version": "0.1.1",
-  "description": "API wrapper and connection helpers to connect with R httpgd servers.",
+  "version": "0.1.2",
+  "description": "R httpgd GraphicsDevice API and connection handler",
   "main": "lib/httpgd.js",
   "types": "lib/httpgd.d.ts",
   "scripts": {
@@ -15,8 +15,17 @@
     "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nx10/httpgd-js.git"
+  },
+  "keywords": ["httpgd", "R", "Plot", "Graphics"],
   "author": "Florian Rupprecht",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nx10/httpgd-js/issues"
+  },
+  "homepage": "https://github.com/nx10/httpgd-js#readme",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
