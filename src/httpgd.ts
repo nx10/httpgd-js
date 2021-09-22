@@ -1,5 +1,6 @@
 import {
   fetch_clear,
+  fetch_plot,
   fetch_plots,
   fetch_remove,
   fetch_renderers,
@@ -146,6 +147,16 @@ export class Httpgd {
     return this.data.plots
       ? url_plot(this.backend, r, true, this.data.plots.state.upid.toString())
       : undefined;
+  }
+
+  /**
+   * Get rendered plot data.
+   *
+   * @param r Plot request object.
+   * @returns Plot data
+   */
+  public getPlot(r: HttpgdPlotRequest): Promise<Response> | undefined {
+    return this.data.plots ? fetch_plot(this.backend, r) : undefined;
   }
 
   /**

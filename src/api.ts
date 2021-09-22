@@ -25,7 +25,7 @@ function make_headers(b: HttpgdBackend): Headers {
   return headers;
 }
 
-async function fetch_url<ResponseType>(
+async function fetch_json<ResponseType>(
   b: HttpgdBackend,
   url: string
 ): Promise<ResponseType> {
@@ -74,7 +74,7 @@ export function url_state(b: HttpgdBackend): string {
  * @returns Response promise
  */
 export function fetch_state(b: HttpgdBackend): Promise<HttpgdStateResponse> {
-  return fetch_url<HttpgdStateResponse>(b, url_state(b));
+  return fetch_json<HttpgdStateResponse>(b, url_state(b));
 }
 
 // /clear
@@ -96,7 +96,7 @@ export function url_clear(b: HttpgdBackend): string {
  * @returns Response promise
  */
 export function fetch_clear(b: HttpgdBackend): Promise<HttpgdStateResponse> {
-  return fetch_url<HttpgdStateResponse>(b, url_clear(b));
+  return fetch_json<HttpgdStateResponse>(b, url_clear(b));
 }
 
 // /renderers
@@ -120,7 +120,7 @@ export function url_renderers(b: HttpgdBackend): string {
 export function fetch_renderers(
   b: HttpgdBackend
 ): Promise<HttpgdRenderersResponse> {
-  return fetch_url<HttpgdRenderersResponse>(b, url_renderers(b));
+  return fetch_json<HttpgdRenderersResponse>(b, url_renderers(b));
 }
 
 // /plots
@@ -142,7 +142,7 @@ export function url_plots(b: HttpgdBackend): string {
  * @returns Response promise
  */
 export function fetch_plots(b: HttpgdBackend): Promise<HttpgdPlotsResponse> {
-  return fetch_url<HttpgdPlotsResponse>(b, url_plots(b));
+  return fetch_json<HttpgdPlotsResponse>(b, url_plots(b));
 }
 
 // /plot
@@ -187,10 +187,11 @@ export function url_plot(
 export function fetch_plot(
   b: HttpgdBackend,
   r: HttpgdPlotRequest
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): Promise<any> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return fetch_url<any>(b, url_plot(b, r));
+): Promise<Response> {
+  const res = fetch(url_plot(b, r), {
+    headers: make_headers(b)
+  });
+  return res;
 }
 
 // /remove
@@ -219,5 +220,5 @@ export function fetch_remove(
   b: HttpgdBackend,
   r: HttpgdRemoveRequest
 ): Promise<HttpgdStateResponse> {
-  return fetch_url<HttpgdStateResponse>(b, url_remove(b, r));
+  return fetch_json<HttpgdStateResponse>(b, url_remove(b, r));
 }
