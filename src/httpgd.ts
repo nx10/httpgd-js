@@ -62,11 +62,18 @@ export class Httpgd {
    * This will also cause a renderer list update and return a promise that will
    * be resolved once the renderers are updated.
    *
-   * @returns
+   * @returns Promise that will be resolved once the renderers are updated.
    */
   public connect(): Promise<void> {
     this.connection.open();
     return this.updateRenderers();
+  }
+
+  /**
+   * Disconnect httpgd backend.
+   */
+  public disconnect(): void {
+    this.connection.close();
   }
 
   /**
