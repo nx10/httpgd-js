@@ -204,7 +204,7 @@ export class HttpgdConnection {
    *
    * @param fun
    */
-  public onRemoteChange(
+  public onRemoteChanged(
     fun: (newState: HttpgdStateResponse, oldState?: HttpgdStateResponse) => void
   ): void {
     this.remoteStateChanged.subscribe(fun);
@@ -215,7 +215,7 @@ export class HttpgdConnection {
    *
    * @param fun
    */
-  public onConnectionChange(
+  public onConnectionChanged(
     fun: (newState: boolean, oldState?: boolean) => void
   ): void {
     this.connectionChanged.subscribe(fun);
