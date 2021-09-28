@@ -51,7 +51,7 @@ export class Httpgd {
     this.data = {};
     this.backend = { host: host, token: token };
     this.connection = new HttpgdConnection(this.backend, allowWebsockets);
-    this.connection.onRemoteChange((newState, oldState?) =>
+    this.connection.onRemoteChanged((newState, oldState?) =>
       this.remoteStateChanged(newState, oldState)
     );
   }
@@ -84,10 +84,10 @@ export class Httpgd {
    *
    * @param fun
    */
-  public onConnectionChange(
+  public onConnectionChanged(
     fun: (newState: boolean, oldState?: boolean) => void
   ): void {
-    this.connection.onConnectionChange(fun);
+    this.connection.onConnectionChanged(fun);
   }
 
   private remoteStateChanged(
