@@ -64,7 +64,13 @@ export type HttpgdRendererType = 'plot' | 'data';
  * Renderer meta information
  */
 export interface HttpgdRendererResponse {
+  /**
+   * Renderer ID
+   */
   id: HttpgdRendererId;
+  /**
+   * Mime type
+   */
   mime: string;
   /**
    * File extension
@@ -78,7 +84,14 @@ export interface HttpgdRendererResponse {
    * Renderer type
    */
   type: HttpgdRendererType;
+  /**
+   * Binary rendering format. (`TRUE` = binary; `FALSE` = string)
+   */
   bin: boolean;
+  /**
+   * Renderer description
+   */
+  descr: string;
 }
 
 /**
