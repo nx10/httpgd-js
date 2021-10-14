@@ -2,7 +2,13 @@
  * Access parameters to a httpgd server.
  */
 export interface HttpgdBackend {
+  /**
+   * Host without protocol
+   */
   host: string;
+  /**
+   * Security token
+   */
   token?: string;
 }
 
@@ -10,16 +16,30 @@ export interface HttpgdBackend {
  * Defines the httpgd server state.
  */
 export interface HttpgdStateResponse {
+  /**
+   * Changes when plots are changed or added
+   */
   upid: number;
+  /**
+   * Number of plots
+   */
   hsize: number;
+  /**
+   * Device active status
+   */
   active: boolean;
 }
 
 /**
- * Plot ID object
+ * Plot ID type
+ */
+export type HttpgdPlotId = string;
+
+/**
+ * Plots response ID object
  */
 export interface HttpgdIdResponse {
-  id: string;
+  id: HttpgdPlotId;
 }
 
 /**
@@ -31,14 +51,33 @@ export interface HttpgdPlotsResponse {
 }
 
 /**
+ * Renderer ID type
+ */
+export type HttpgdRendererId = string;
+
+/**
+ * Renderer type type
+ */
+export type HttpgdRendererType = 'plot' | 'data';
+
+/**
  * Renderer meta information
  */
 export interface HttpgdRendererResponse {
-  id: string;
+  id: HttpgdRendererId;
   mime: string;
+  /**
+   * File extension
+   */
   ext: string;
+  /**
+   * Human readable name
+   */
   name: string;
-  type: string;
+  /**
+   * Renderer type
+   */
+  type: HttpgdRendererType;
   bin: boolean;
 }
 
@@ -53,8 +92,8 @@ export interface HttpgdRenderersResponse {
  * Plot request parameters
  */
 export interface HttpgdPlotRequest {
-  id?: string;
-  renderer?: string;
+  id?: HttpgdPlotId;
+  renderer?: HttpgdRendererId;
   width?: number;
   height?: number;
   zoom?: number;
@@ -65,5 +104,5 @@ export interface HttpgdPlotRequest {
  * Remove request parameters
  */
 export interface HttpgdRemoveRequest {
-  id: string;
+  id: HttpgdPlotId;
 }

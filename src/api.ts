@@ -55,10 +55,8 @@ export function new_websocket(b: HttpgdBackend): WebSocket {
   return new WebSocket(url_websocket(b));
 }
 
-// /state
-
 /**
- * Get the URL of the /state API.
+ * Get the URL of the `/state` API.
  *
  * @param b Httpgd backend
  * @returns URL string
@@ -68,7 +66,7 @@ export function url_state(b: HttpgdBackend): string {
 }
 
 /**
- * Sends a GET-request to the /state API.
+ * Sends a GET-request to the `/state` API.
  *
  * @param b Httpgd backend
  * @returns Response promise
@@ -77,10 +75,8 @@ export function fetch_state(b: HttpgdBackend): Promise<HttpgdStateResponse> {
   return fetch_json<HttpgdStateResponse>(b, url_state(b));
 }
 
-// /clear
-
 /**
- * Get the URL of the /clear API.
+ * Get the URL of the `/clear` API.
  *
  * @param b Httpgd backend
  * @returns URL string
@@ -90,7 +86,7 @@ export function url_clear(b: HttpgdBackend): string {
 }
 
 /**
- * Sends a GET-request to the /clear API.
+ * Sends a GET-request to the `/clear` API.
  *
  * @param b Httpgd backend
  * @returns Response promise
@@ -99,10 +95,8 @@ export function fetch_clear(b: HttpgdBackend): Promise<HttpgdStateResponse> {
   return fetch_json<HttpgdStateResponse>(b, url_clear(b));
 }
 
-// /renderers
-
 /**
- * Get the URL of the /renderers API.
+ * Get the URL of the `/renderers` API.
  *
  * @param b Httpgd backend
  * @returns URL string
@@ -112,7 +106,7 @@ export function url_renderers(b: HttpgdBackend): string {
 }
 
 /**
- * Sends a GET-request to the /clear API.
+ * Sends a GET-request to the `/clear` API.
  *
  * @param b Httpgd backend
  * @returns Response promise
@@ -123,10 +117,8 @@ export function fetch_renderers(
   return fetch_json<HttpgdRenderersResponse>(b, url_renderers(b));
 }
 
-// /plots
-
 /**
- * Get the URL of the /plots API.
+ * Get the URL of the `/plots` API.
  *
  * @param b Httpgd backend
  * @returns URL string
@@ -136,7 +128,7 @@ export function url_plots(b: HttpgdBackend): string {
 }
 
 /**
- * Sends a GET-request to the /plots API.
+ * Sends a GET-request to the `/plots` API.
  *
  * @param b Httpgd backend
  * @returns Response promise
@@ -145,10 +137,8 @@ export function fetch_plots(b: HttpgdBackend): Promise<HttpgdPlotsResponse> {
   return fetch_json<HttpgdPlotsResponse>(b, url_plots(b));
 }
 
-// /plot
-
 /**
- * Get the URL of the /plot API.
+ * Get the URL of the `/plot` API.
  *
  * @param b Httpgd backend
  * @param r Plot request object
@@ -178,7 +168,7 @@ export function url_plot(
 }
 
 /**
- * Sends a GET-request to the /plot API.
+ * Sends a GET-request to the `/plot` API.
  *
  * @param b Httpgd backend
  * @param r Plot request object
@@ -194,10 +184,8 @@ export function fetch_plot(
   return res;
 }
 
-// /remove
-
 /**
- * Get the URL of the /remove API.
+ * Get the URL of the `/remove` API.
  *
  * @param b Httpgd backend
  * @param r Remove request object
@@ -210,7 +198,7 @@ export function url_remove(b: HttpgdBackend, r: HttpgdRemoveRequest): string {
 }
 
 /**
- * Sends a GET-request to the /remove API.
+ * Sends a GET-request to the `/remove` API.
  *
  * @param b Httpgd backend
  * @param r Remove request object

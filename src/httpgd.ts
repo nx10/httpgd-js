@@ -110,20 +110,18 @@ export class Httpgd {
     this.remoteStateChanged(newState, this.data.plots?.state);
   }
 
-  private updateRenderers(): Promise<void> {
-    return fetch_renderers(this.backend).then((res) => {
-      this.data.renderers = res;
-    });
+  private async updateRenderers(): Promise<void> {
+    const res = await fetch_renderers(this.backend);
+    this.data.renderers = res;
   }
 
   /**
-   * Update plot ID list data.
+   * Update plot ID list data. This will trigger `Httpgd.onPlotsChanged()` listeners.
    */
-  public updatePlots(): void {
-    fetch_plots(this.backend).then((res) => {
-      this.data.plots = res;
-      this.plotsChanged.notify(res);
-    });
+  public async updatePlots(): Promise<void> {
+    const res = await fetch_plots(this.backend);
+    this.data.plots = res;
+    this.plotsChanged.notify(res);
   }
 
   /**
@@ -197,16 +195,16 @@ export class Httpgd {
    *
    * @param r Remove request object
    */
-  public removePlot(r: HttpgdRemoveRequest): void {
-    fetch_remove(this.backend, r).then((state) =>
-      this.localStateChanged(state)
-    );
+  public async removePlot(r: HttpgdRemoveRequest): Promise<void> {
+    const state = await fetch_remove(this.backend, r);
+    return this.localStateChanged(state);
   }
 
   /**
    * Clear all plots.
    */
-  public clearPlots(): void {
-    fetch_clear(this.backend).then((state) => this.localStateChanged(state));
+  public async clearPlots(): Promise<void> {
+    const state = await fetch_clear(this.backend);
+    return this.localStateChanged(state);
   }
 }
