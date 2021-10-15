@@ -1,6 +1,6 @@
 {
   "name": "httpgd",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "R httpgd GraphicsDevice API and connection handler",
   "main": "lib/httpgd.js",
   "types": "lib/httpgd.d.ts",
