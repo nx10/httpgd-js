@@ -1,7 +1,7 @@
 import { HttpgdBackend, HttpgdStateResponse } from './types';
 import * as api from './api';
 import { StateChangeListener } from './utils';
-import WebSocket = require('isomorphic-ws');
+import { WebSocket } from 'isomorphic-ws';
 
 /**
  * Connection mode.
@@ -108,7 +108,7 @@ export class HttpgdConnection {
         this.clearWebsocket();
 
         this.socket = api.new_websocket(this.backend);
-        this.socket.onmessage = (ev) => this.onWsMessage(ev.data);
+        this.socket.onmessage = (ev) => this.onWsMessage(ev.data.toString());
         this.socket.onopen = () => this.onWsOpen();
         this.socket.onclose = () => this.onWsClose();
         this.socket.onerror = () => this.start(HttpgdConnectionMode.SLOWPOLL);
