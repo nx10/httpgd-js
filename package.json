@@ -19,7 +19,12 @@
     "type": "git",
     "url": "git+https://github.com/nx10/httpgd-js.git"
   },
-  "keywords": ["httpgd", "R", "Plot", "Graphics"],
+  "keywords": [
+    "httpgd",
+    "R",
+    "Plot",
+    "Graphics"
+  ],
   "author": "Florian Rupprecht",
   "license": "MIT",
   "bugs": {
@@ -36,5 +41,8 @@
   },
   "files": [
     "lib/**/*"
-  ]
+  ],
+  "dependencies": {
+    "isomorphic-ws": "^4.0.1"
+  }
 }

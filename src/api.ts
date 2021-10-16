@@ -6,6 +6,7 @@ import {
   HttpgdPlotRequest,
   HttpgdRemoveRequest
 } from './types';
+import WebSocket = require('isomorphic-ws');
 
 const URL_HTTP = 'http://';
 const URL_WS = 'ws://';

@@ -1,6 +1,7 @@
 import { HttpgdBackend, HttpgdStateResponse } from './types';
 import * as api from './api';
 import { StateChangeListener } from './utils';
+import WebSocket = require('isomorphic-ws');
 
 /**
  * Connection mode.
