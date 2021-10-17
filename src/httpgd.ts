@@ -163,6 +163,23 @@ export class Httpgd {
   public getPlot(r: HttpgdPlotRequest): Promise<Response> | undefined {
     return this.data.plots ? fetch_plot(this.backend, r) : undefined;
   }
+  
+  /**
+   * Get content of rendered plot.
+   * 
+   * This is a wrapper around `getPlot` that only returns the plot content.
+   * 
+   * @param r Plot request object.
+   * @returns Plot content.
+   */
+  public async getPlotContent(r: HttpgdPlotRequest): Promise<Buffer | undefined> {
+    const plt = await this.getPlot(r);
+    if(!plt){
+      return;
+    }
+    const ab = await plt.arrayBuffer();
+    return Buffer.from(ab);
+  }
 
   /**
    * Listen to plot changes.
