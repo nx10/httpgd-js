@@ -172,13 +172,13 @@ export class Httpgd {
    * @param r Plot request object.
    * @returns Plot content.
    */
-  public async getPlotContent(r: HttpgdPlotRequest): Promise<ArrayBuffer | undefined> {
+  public async getPlotContent(r: HttpgdPlotRequest): Promise<Buffer | undefined> {
     const plt = await this.getPlot(r);
     if(!plt){
       return;
     }
     const ab = await plt.arrayBuffer();
-    return ab;
+    return Buffer.from(ab);
   }
 
   /**
