@@ -7,7 +7,7 @@ import {
   HttpgdRemoveRequest,
   HttpgdInfoResponse
 } from './types';
-import { WebSocket } from 'isomorphic-ws';
+import WebSocket from 'isomorphic-ws';
 import { fetch, Headers } from 'cross-fetch';
 
 const URL_HTTP = 'http://';
