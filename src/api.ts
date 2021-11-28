@@ -4,13 +4,15 @@ import {
   HttpgdPlotsResponse,
   HttpgdRenderersResponse,
   HttpgdPlotRequest,
-  HttpgdRemoveRequest
+  HttpgdRemoveRequest,
+  HttpgdInfoResponse
 } from './types';
 import { WebSocket } from 'isomorphic-ws';
 import { fetch, Headers } from 'cross-fetch';
 
 const URL_HTTP = 'http://';
 const URL_WS = 'ws://';
+const URL_INFO = '/info';
 const URL_STATE = '/state';
 const URL_CLEAR = '/clear';
 const URL_REMOVE = '/remove';
@@ -75,6 +77,26 @@ export function url_state(b: HttpgdBackend): string {
  */
 export function fetch_state(b: HttpgdBackend): Promise<HttpgdStateResponse> {
   return fetch_json<HttpgdStateResponse>(b, url_state(b));
+}
+
+/**
+ * Get the URL of the `/info` API.
+ *
+ * @param b Httpgd backend
+ * @returns URL string
+ */
+export function url_info(b: HttpgdBackend): string {
+  return URL_HTTP + b.host + URL_INFO;
+}
+
+/**
+ * Sends a GET-request to the `/info` API.
+ *
+ * @param b Httpgd backend
+ * @returns Response promise
+ */
+export function fetch_info(b: HttpgdBackend): Promise<HttpgdInfoResponse> {
+  return fetch_json<HttpgdInfoResponse>(b, url_info(b));
 }
 
 /**
@@ -179,7 +201,7 @@ export function url_plot(
 export function fetch_plot(
   b: HttpgdBackend,
   r: HttpgdPlotRequest
-): Promise<Response> {
+): ReturnType<typeof fetch> {
   const res = fetch(url_plot(b, r), {
     headers: make_headers(b)
   });

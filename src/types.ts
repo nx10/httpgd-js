@@ -31,6 +31,33 @@ export interface HttpgdStateResponse {
 }
 
 /**
+ * Defines the httpgd server state.
+ */
+export interface HttpgdInfoResponse {
+  /**
+   * Unique server ID
+   */
+  id: number;
+  /**
+   * Httpgd and library version information
+   */
+  version: {
+    /**
+     * Httpgd version
+     */
+    httpgd: string;
+    /**
+     * Boost version
+     */
+    boost: string;
+    /**
+     * Cairo version
+     */
+    cairo: string;
+  };
+}
+
+/**
  * Plot ID type
  */
 export type HttpgdPlotId = string;

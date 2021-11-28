@@ -1,5 +1,6 @@
 import {
   fetch_clear,
+  fetch_info,
   fetch_plot,
   fetch_plots,
   fetch_remove,
@@ -10,6 +11,7 @@ import { HttpgdConnection } from './connection';
 import {
   HttpgdBackend,
   HttpgdIdResponse,
+  HttpgdInfoResponse,
   HttpgdPlotRequest,
   HttpgdPlotsResponse,
   HttpgdRemoveRequest,
@@ -20,6 +22,7 @@ import {
 import { StateChangeListener } from './utils';
 
 interface HttpgdData {
+  info?: HttpgdInfoResponse;
   renderers?: HttpgdRenderersResponse;
   plots?: HttpgdPlotsResponse;
 }
@@ -62,11 +65,12 @@ export class Httpgd {
    * This will also cause a renderer list update and return a promise that will
    * be resolved once the renderers are updated.
    *
-   * @returns Promise that will be resolved once the renderers are updated.
+   * @returns Promise that will be resolved once the server information is
+   *   updated (server info, list of renderers).
    */
   public connect(): Promise<void> {
     this.connection.open();
-    return this.updateRenderers();
+    return this.updateInfo();
   }
 
   /**
@@ -110,9 +114,11 @@ export class Httpgd {
     this.remoteStateChanged(newState, this.data.plots?.state);
   }
 
-  private async updateRenderers(): Promise<void> {
-    const res = await fetch_renderers(this.backend);
-    this.data.renderers = res;
+  private async updateInfo(): Promise<void> {
+    const res_info = fetch_info(this.backend);
+    const res_renderers = fetch_renderers(this.backend);
+    this.data.info = await res_info;
+    this.data.renderers = await res_renderers;
   }
 
   /**
@@ -131,6 +137,15 @@ export class Httpgd {
    */
   public getPlots(): HttpgdIdResponse[] {
     return this.data.plots ? this.data.plots.plots : [];
+  }
+
+  /**
+   * Get renderer list.
+   *
+   * @returns
+   */
+  public getInfo(): HttpgdInfoResponse | undefined {
+    return this.data?.info;
   }
 
   /**
@@ -160,7 +175,9 @@ export class Httpgd {
    * @param r Plot request object.
    * @returns Plot data
    */
-  public getPlot(r: HttpgdPlotRequest): Promise<Response> | undefined {
+  public getPlot(
+    r: HttpgdPlotRequest
+  ): ReturnType<typeof fetch_plot> | undefined {
     return this.data.plots ? fetch_plot(this.backend, r) : undefined;
   }
 
